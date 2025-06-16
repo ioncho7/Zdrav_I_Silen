@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Zdrav_I_SIlen")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b5e81ffe402f3929ddd4dd14b1f690d97f508eae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+376d9da0cf6f209403369c153b3720cbf8c86c85")]
 [assembly: System.Reflection.AssemblyProductAttribute("Zdrav_I_SIlen")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Zdrav_I_SIlen")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

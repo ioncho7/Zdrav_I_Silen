@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 public class Cart
 {
     [Required]
+    [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required(ErrorMessage = "Продуктът трябва да има идентификатор.")]
@@ -30,5 +31,8 @@ public class Cart
     [RegularExpression(@".+\.(jpg|jpeg|png|gif|bmp|webp)$",
         ErrorMessage = "URL адресът трябва да завършва с .jpg, .png, .gif и т.н.")]
     public string? Image { get; set; }
+
+    [Display(Name = "Обща стойност")]
+    public decimal TotalPrice => Price * Quantity;
 } 
 

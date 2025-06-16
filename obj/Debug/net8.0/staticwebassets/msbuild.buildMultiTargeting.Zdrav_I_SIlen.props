@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Zdrav_I_SIlen.props" />
+</Project>

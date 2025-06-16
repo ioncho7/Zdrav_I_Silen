@@ -4,6 +4,8 @@ namespace Zdrav_I_SIlen.Models
 {
     public class Product
     {
+        [Required]
+        [Key]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Полето 'Име' е задължително.")]
