@@ -2,8 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 
 
-public class CartItem
+public class Cart
 {
+    [Required]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
     [Required(ErrorMessage = "Продуктът трябва да има идентификатор.")]
     public int ProductId { get; set; }
 

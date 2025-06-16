@@ -2,9 +2,8 @@
 using System.ComponentModel.DataAnnotations;
     public class Category
     {
-        [Required(ErrorMessage = "Категорията трябва да има идентификатор.")]
-        public int Id { get; set; }
-
+        [Required]
+        public Guid Id { get; set; } = Guid.NewGuid();
         [Required(ErrorMessage = "Името на категорията е задължително.")]
         [MaxLength(30, ErrorMessage = "Името на категорията не може да надвишава 30 символа.")]
         [Display(Name = "Име на категория")]
