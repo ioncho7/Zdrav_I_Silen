@@ -1,0 +1,11 @@
+.vs
+.bin
+.obj
+bin
+obj
+bin/Debug
+bin/Release
+bin/x64
+bin/x86
+bin/Debug/net8.0
+
