@@ -103,6 +103,17 @@ static void SeedData(ApplicationDbContext context)
         new Product 
         { 
             Id = Guid.NewGuid(),
+            Name = "Мултивитамини Комплекс", 
+            Description = "Пълен комплекс от основни витамини и минерали за ежедневна подкрепа на организма. Съдържа витамини A, B-комплекс, C, D3, E и K, заедно с важни минерали като цинк, желязо и магнезий. Подходящ за активни хора и всички, които искат да поддържат оптимално здраве.",
+            Size = "90 таблетки",
+            UnitPrice = 32.99m,
+            Quantity = 40,
+            CategoryId = categories[0].Id,
+            ImagePath = "/images/vitamini.jpg"
+        },
+        new Product 
+        { 
+            Id = Guid.NewGuid(),
             Name = "Магнезий 400mg", 
             Description = "За здрави мускули и нервна система",
             Size = "60 капсули",
