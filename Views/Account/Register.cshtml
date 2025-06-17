@@ -1,0 +1,75 @@
+@model Zdrav_I_SIlen.Models.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+                <form method="post" asp-controller="Account" asp-action="Register">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="FirstName">Име</label>
+                        <input asp-for="FirstName" class="form-control" required>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="LastName">Фамилия</label>
+                        <input asp-for="LastName" class="form-control" required>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Email">Имейл</label>
+                        <input asp-for="Email" class="form-control" required>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="PhoneNumber">Телефон</label>
+                        <input asp-for="PhoneNumber" class="form-control">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Password">Парола</label>
+                        <input asp-for="Password" class="form-control" required>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="ConfirmPassword">Потвърди парола</label>
+                        <input asp-for="ConfirmPassword" class="form-control" required>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <div class="form-check">
+                            <input asp-for="AgreeToTerms" class="form-check-input" required>
+                            <label asp-for="AgreeToTerms" class="form-check-label">
+                                Съгласен съм с <a href="#">общите условия</a>
+                            </label>
+                            <span asp-validation-for="AgreeToTerms" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary">Регистрация</button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <p>Вече имате акаунт? <a asp-controller="Account" asp-action="Login">Влезте</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

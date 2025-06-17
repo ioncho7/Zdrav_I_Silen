@@ -9,7 +9,7 @@ public class Cart
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required(ErrorMessage = "Продуктът трябва да има идентификатор.")]
-    public int ProductId { get; set; }
+    public Guid ProductId { get; set; }
 
     [Required(ErrorMessage = "Името на продукта е задължително.")]
     [MaxLength(255, ErrorMessage = "Името не може да надвишава 255 символа.")]
@@ -34,5 +34,8 @@ public class Cart
 
     [Display(Name = "Обща стойност")]
     public decimal TotalPrice => Price * Quantity;
+
+    // Navigation property
+    public Product? Product { get; set; }
 } 
 

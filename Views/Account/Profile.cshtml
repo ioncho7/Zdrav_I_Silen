@@ -1,0 +1,97 @@
+@{
+    ViewData["Title"] = "Моят профил";
+}
+
+<div class="container">
+    <h1 class="text-center mb-5">@ViewData["Title"]</h1>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Лична информация</h5>
+                    <form method="post" asp-controller="Account" asp-action="UpdateProfile">
+                        <div class="mb-3">
+                            <label for="FirstName" class="form-label">Име</label>
+                            <input type="text" class="form-control" id="FirstName" name="FirstName" value="@ViewBag.FirstName">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="LastName" class="form-label">Фамилия</label>
+                            <input type="text" class="form-control" id="LastName" name="LastName" value="@ViewBag.LastName">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="Email" class="form-label">Имейл</label>
+                            <input type="email" class="form-control" id="Email" name="Email" value="@ViewBag.Email" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="PhoneNumber" class="form-label">Телефон</label>
+                            <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@ViewBag.PhoneNumber">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Запази промените</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Промени парола</h5>
+                    <form method="post" asp-controller="Account" asp-action="ChangePassword">
+                        <div class="mb-3">
+                            <label for="CurrentPassword" class="form-label">Текуща парола</label>
+                            <input type="password" class="form-control" id="CurrentPassword" name="CurrentPassword" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="NewPassword" class="form-label">Нова парола</label>
+                            <input type="password" class="form-control" id="NewPassword" name="NewPassword" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="ConfirmPassword" class="form-label">Потвърди нова парола</label>
+                            <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Промени парола</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">История на поръчките</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Номер на поръчка</th>
+                                    <th>Дата</th>
+                                    <th>Статус</th>
+                                    <th>Общо</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Order history will be populated here -->
+                                <tr>
+                                    <td>#12345</td>
+                                    <td>01.01.2024</td>
+                                    <td><span class="badge bg-success">Доставена</span></td>
+                                    <td>99.99 лв.</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">Детайли</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,128 @@
+@model IEnumerable<Zdrav_I_SIlen.Models.Cart>
+@{
+    ViewData["Title"] = "Количка";
+    decimal total = Model?.Sum(item => item.TotalPrice) ?? 0;
+}
+
+<div class="container">
+    <h1 class="text-center mb-5">@ViewData["Title"]</h1>
+    
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Продукт</th>
+                                        <th>Цена</th>
+                                        <th>Количество</th>
+                                        <th>Общо</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    @if (!string.IsNullOrEmpty(item.Image))
+                                                    {
+                                                        <img src="@item.Image" alt="@item.Name" class="img-thumbnail" style="width: 50px; margin-right: 10px;">
+                                                    }
+                                                    <span>@item.Name</span>
+                                                </div>
+                                            </td>
+                                            <td>@item.Price.ToString("C")</td>
+                                            <td>
+                                                <div class="input-group" style="width: 120px;">
+                                                    <button class="btn btn-outline-secondary decrease-quantity" type="button" data-cart-id="@item.Id">-</button>
+                                                    <input type="number" class="form-control text-center quantity-input" value="@item.Quantity" min="1" max="1000" data-cart-id="@item.Id">
+                                                    <button class="btn btn-outline-secondary increase-quantity" type="button" data-cart-id="@item.Id">+</button>
+                                                </div>
+                                            </td>
+                                            <td>@item.TotalPrice.ToString("C")</td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm remove-item" data-cart-id="@item.Id">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Обобщение на поръчката</h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Междинна сума:</span>
+                            <span>@total.ToString("C")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Доставка:</span>
+                            <span>Безплатна</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Общо:</strong>
+                            <strong>@total.ToString("C")</strong>
+                        </div>
+                        <button class="btn btn-primary w-100 mb-2">Приключи поръчката</button>
+                        <a asp-controller="Products" asp-action="Index" class="btn btn-outline-primary w-100">Продължи пазаруването</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <h3>Вашата количка е празна</h3>
+            <p>Разгледайте нашите продукти и добавете нещо в количката.</p>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-primary">Разгледай продуктите</a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.decrease-quantity').click(function() {
+                var input = $(this).siblings('.quantity-input');
+                var value = parseInt(input.val());
+                if (value > 1) {
+                    input.val(value - 1).trigger('change');
+                }
+            });
+
+            $('.increase-quantity').click(function() {
+                var input = $(this).siblings('.quantity-input');
+                var value = parseInt(input.val());
+                if (value < 1000) {
+                    input.val(value + 1).trigger('change');
+                }
+            });
+
+            $('.quantity-input').change(function() {
+                var cartId = $(this).data('cart-id');
+                var quantity = $(this).val();
+                // Update quantity logic will be implemented here
+            });
+
+            $('.remove-item').click(function() {
+                var cartId = $(this).data('cart-id');
+                // Remove item logic will be implemented here
+            });
+        });
+    </script>
+} 

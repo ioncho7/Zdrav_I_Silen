@@ -1,8 +1,51 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Начало";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero-section text-center py-5 bg-light">
+    <h1 class="display-4">Добре дошли в Здрав и Силен</h1>
+    <p class="lead">Вашият източник на здравословни храни и добавки</p>
+    <hr class="my-4">
+    <p>Разгледайте нашите продукти и открийте пътя към по-здравословен начин на живот.</p>
+    <a class="btn btn-primary btn-lg" asp-controller="Products" asp-action="Index" role="button">Разгледай продуктите</a>
+</div>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Най-продавани продукти</h2>
+    <div class="row">
+        <!-- Featured products will be loaded here -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="~/images/placeholder.jpg" class="card-img-top" alt="Product">
+                <div class="card-body">
+                    <h5 class="card-title">Продукт 1</h5>
+                    <p class="card-text">Кратко описание на продукта.</p>
+                    <p class="card-text"><strong>Цена: 29.99 лв.</strong></p>
+                    <a href="#" class="btn btn-primary">Добави в количката</a>
+                </div>
+            </div>
+        </div>
+        <!-- Repeat for other featured products -->
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Защо да изберете нас?</h2>
+    <div class="row">
+        <div class="col-md-4 text-center mb-4">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
+            <h3>Качествени продукти</h3>
+            <p>Всички наши продукти са с гарантирано качество и сертификати.</p>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <i class="bi bi-truck text-primary" style="font-size: 2rem;"></i>
+            <h3>Бърза доставка</h3>
+            <p>Доставяме навсякъде в България в рамките на 1-2 работни дни.</p>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <i class="bi bi-headset text-info" style="font-size: 2rem;"></i>
+            <h3>Поддръжка 24/7</h3>
+            <p>Нашият екип е на разположение за всякакви въпроси.</p>
+        </div>
+    </div>
 </div>

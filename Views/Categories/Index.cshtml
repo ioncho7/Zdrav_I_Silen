@@ -1,0 +1,24 @@
+@model IEnumerable<Zdrav_I_SIlen.Models.Category>
+@{
+    ViewData["Title"] = "Категории";
+}
+
+<div class="container">
+    <h1 class="text-center mb-5">@ViewData["Title"]</h1>
+    
+    <div class="row">
+        @foreach (var category in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@category.Name</h5>
+                        <p class="card-text">Поръчка: @category.DisplayOrder</p>
+                        <a asp-controller="Products" asp-action="Index" asp-route-categoryId="@category.Id" 
+                           class="btn btn-primary">Разгледай продуктите</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div> 

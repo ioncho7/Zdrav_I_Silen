@@ -1,0 +1,119 @@
+@model IEnumerable<Zdrav_I_SIlen.Models.Product>
+@{
+    ViewData["Title"] = "Продукти";
+}
+
+<div class="container">
+    <h1 class="text-center mb-5">@ViewData["Title"]</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Филтри</h5>
+                    <form method="get" asp-controller="Products" asp-action="Index">
+                        <div class="mb-3">
+                            <label for="categoryId" class="form-label">Категория</label>
+                            <select class="form-select" id="categoryId" name="categoryId">
+                                <option value="">Всички категории</option>
+                                @if (ViewBag.Categories != null)
+                                {
+                                    @foreach (var category in ViewBag.Categories as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)
+                                    {
+                                        <option value="@category.Value" selected="@category.Selected">@category.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="minPrice" class="form-label">Минимална цена</label>
+                            <input type="number" class="form-control" id="minPrice" name="minPrice" min="0" step="0.01" value="@ViewBag.MinPrice">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="maxPrice" class="form-label">Максимална цена</label>
+                            <input type="number" class="form-control" id="maxPrice" name="maxPrice" min="0" step="0.01" value="@ViewBag.MaxPrice">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="searchTerm" class="form-label">Търсене</label>
+                            <input type="text" class="form-control" id="searchTerm" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Търсене по име или описание">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Приложи филтри</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            
+            <div class="row">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var product in Model)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                @if (!string.IsNullOrEmpty(product.ImagePath))
+                                {
+                                    <img src="@product.ImagePath" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <img src="~/images/placeholder.jpg" class="card-img-top" alt="Placeholder" style="height: 200px; object-fit: cover;">
+                                }
+                                <div class="card-body">
+                                    <h5 class="card-title">@product.Name</h5>
+                                    <p class="card-text">@product.Description</p>
+                                    @if (!string.IsNullOrEmpty(product.Size))
+                                    {
+                                        <p class="card-text"><small class="text-muted">Размер: @product.Size</small></p>
+                                    }
+                                    <p class="card-text"><strong>Цена: @product.UnitPrice.ToString("C")</strong></p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" 
+                                           class="btn btn-outline-primary">Детайли</a>
+                                        <form method="post" asp-controller="Cart" asp-action="AddToCart" style="display: inline;">
+                                            <input type="hidden" name="productId" value="@product.Id" />
+                                            <input type="hidden" name="quantity" value="1" />
+                                            <button type="submit" class="btn btn-primary">
+                                                Добави в количката
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center">
+                        <p>Няма намерени продукти.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.add-to-cart').click(function() {
+                var productId = $(this).data('product-id');
+                // Add to cart logic will be implemented here
+                alert('Продуктът е добавен в количката!');
+            });
+        });
+    </script>
+} 

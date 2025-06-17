@@ -1,0 +1,99 @@
+@model Zdrav_I_SIlen.Models.ViewModels.ContactViewModel
+@{
+    ViewData["Title"] = "Контакти";
+}
+
+<div class="container">
+    <h1 class="text-center mb-5">@ViewData["Title"]</h1>
+    
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3>Изпратете ни съобщение</h3>
+                    <form method="post" asp-controller="Home" asp-action="Contact">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="Name">Име</label>
+                            <input asp-for="Name" class="form-control" required>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="Email">Имейл</label>
+                            <input asp-for="Email" class="form-control" required>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="Subject">Тема</label>
+                            <input asp-for="Subject" class="form-control" required>
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="Message">Съобщение</label>
+                            <textarea asp-for="Message" class="form-control" rows="5" required></textarea>
+                            <span asp-validation-for="Message" class="text-danger"></span>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Изпрати</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3>Контактна информация</h3>
+                    <div class="mb-4">
+                        <h5>Адрес</h5>
+                        <p>ул. "Примерна" 123<br>София, България</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>Телефон</h5>
+                        <p>+359 2 123 4567</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>Имейл</h5>
+                        <p>info@zdravisilen.bg</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>Работно време</h5>
+                        <p>Понеделник - Петък: 9:00 - 18:00<br>
+                        Събота: 10:00 - 16:00<br>
+                        Неделя: Затворено</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h3>Последвайте ни</h3>
+                    <div class="d-flex justify-content-around">
+                        <a href="#" class="text-dark"><i class="bi bi-facebook" style="font-size: 2rem;"></i></a>
+                        <a href="#" class="text-dark"><i class="bi bi-instagram" style="font-size: 2rem;"></i></a>
+                        <a href="#" class="text-dark"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 
