@@ -12,8 +12,8 @@ using Zdrav_I_SIlen.Data;
 namespace Zdrav_I_SIlen.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250617132746_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250617133830_InitialCreate1")]
+    partial class InitialCreate1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

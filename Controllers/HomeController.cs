@@ -1,30 +1,63 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Zdrav_I_SIlen.Models;
 using Zdrav_I_SIlen.Models.ViewModels;
 using Zdrav_I_SIlen.Data;
 
 namespace Zdrav_I_SIlen.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(ApplicationDbContext context) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context = context;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public async Task<IActionResult> Index()
         {
-            _logger = logger;
-            _context = context;
+            try
+            {
+                // Get featured products for homepage - using async to prevent blocking
+                var featuredProducts = await _context.Products
+                    .Take(3)
+                    .ToListAsync();
+                
+                return View(featuredProducts);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (you should implement proper logging)
+                Console.WriteLine($"Database error: {ex.Message}");
+                
+                // Return empty list if database is not available
+                return View(new List<Product>());
+            }
         }
 
-        public IActionResult Index()
+        // Test database connection
+        public async Task<IActionResult> TestDb()
         {
-            // Get featured products for homepage
-            var featuredProducts = _context.Products
-                .Take(3)
-                .ToList();
+            try
+            {
+                // Test if we can connect to the database
+                var canConnect = await _context.Database.CanConnectAsync();
+                
+                if (canConnect)
+                {
+                    var productCount = await _context.Products.CountAsync();
+                    var categoryCount = await _context.Categories.CountAsync();
+                    
+                    ViewBag.Message = $"✅ Database connection successful! Products: {productCount}, Categories: {categoryCount}";
+                }
+                else
+                {
+                    ViewBag.Message = "❌ Cannot connect to database";
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = $"❌ Database error: {ex.Message}";
+            }
             
-            return View(featuredProducts);
+            return View();
         }
 
         public IActionResult Contact()

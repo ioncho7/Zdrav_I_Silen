@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Database Test";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Database Connection Test</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h4>@ViewBag.Message</h4>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<Zdrav_I_SIlen.Models.Product>
+@{
     ViewData["Title"] = "Начало";
 }
 
@@ -13,18 +14,38 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Най-продавани продукти</h2>
     <div class="row">
-        <!-- Featured products will be loaded here -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <img src="~/images/placeholder.jpg" class="card-img-top" alt="Product">
-                <div class="card-body">
-                    <h5 class="card-title">Продукт 1</h5>
-                    <p class="card-text">Кратко описание на продукта.</p>
-                    <p class="card-text"><strong>Цена: 29.99 лв.</strong></p>
-                    <a href="#" class="btn btn-primary">Добави в количката</a>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var product in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="@(product.ImagePath ?? "~/images/placeholder.jpg")" class="card-img-top" alt="@product.Name">
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text">@(product.Description ?? "Няма описание.")</p>
+                            <p class="card-text"><strong>Цена: @product.UnitPrice.ToString("F2") лв.</strong></p>
+                            <a href="#" class="btn btn-primary">Добави в количката</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <!-- Fallback content when no products are available -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="~/images/placeholder.jpg" class="card-img-top" alt="Product">
+                    <div class="card-body">
+                        <h5 class="card-title">Продукт 1</h5>
+                        <p class="card-text">Кратко описание на продукта.</p>
+                        <p class="card-text"><strong>Цена: 29.99 лв.</strong></p>
+                        <a href="#" class="btn btn-primary">Добави в количката</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
         <!-- Repeat for other featured products -->
     </div>
 </div>
