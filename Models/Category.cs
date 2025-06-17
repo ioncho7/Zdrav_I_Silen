@@ -4,7 +4,8 @@ using System.ComponentModel.DataAnnotations;
     {
         [Required]
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
+        
         [Required(ErrorMessage = "Името на категорията е задължително.")]
         [MaxLength(30, ErrorMessage = "Името на категорията не може да надвишава 30 символа.")]
         [Display(Name = "Име на категория")]

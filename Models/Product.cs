@@ -6,7 +6,7 @@ namespace Zdrav_I_SIlen.Models
     {
         [Required]
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required(ErrorMessage = "Полето 'Име' е задължително.")]
         [MaxLength(255, ErrorMessage = "Името не може да надвишава 255 символа.")]
@@ -36,7 +36,7 @@ namespace Zdrav_I_SIlen.Models
 
         // --- Foreign Key ---
         [Display(Name = "Категория")]
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public Category Category { get; set; } = null!;
     }
 }
