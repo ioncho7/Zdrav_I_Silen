@@ -4,6 +4,8 @@
     decimal total = Model?.Sum(item => item.TotalPrice) ?? 0;
 }
 
+@Html.AntiForgeryToken()
+
 <div class="container">
     <h1 class="text-center mb-5">@ViewData["Title"]</h1>
     
@@ -12,6 +14,12 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Продукти в количката</h5>
+                        <button class="btn btn-outline-danger btn-sm clear-cart">
+                            <i class="bi bi-trash"></i> Изчисти количката
+                        </button>
+                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table">
@@ -39,13 +47,13 @@
                                             </td>
                                             <td>@item.Price.ToString("C")</td>
                                             <td>
-                                                <div class="input-group" style="width: 120px;">
-                                                    <button class="btn btn-outline-secondary decrease-quantity" type="button" data-cart-id="@item.Id">-</button>
-                                                    <input type="number" class="form-control text-center quantity-input" value="@item.Quantity" min="1" max="1000" data-cart-id="@item.Id">
-                                                    <button class="btn btn-outline-secondary increase-quantity" type="button" data-cart-id="@item.Id">+</button>
+                                                <div class="input-group" style="width: 150px; min-width: 150px;">
+                                                    <button class="btn btn-outline-secondary decrease-quantity" type="button" data-cart-id="@item.Id" style="padding: 0.375rem 0.5rem;">-</button>
+                                                    <input type="number" class="form-control text-center quantity-input" value="@item.Quantity" min="1" max="1000" data-cart-id="@item.Id" style="padding: 0.375rem 0.25rem; min-width: 60px;">
+                                                    <button class="btn btn-outline-secondary increase-quantity" type="button" data-cart-id="@item.Id" style="padding: 0.375rem 0.5rem;">+</button>
                                                 </div>
                                             </td>
-                                            <td>@item.TotalPrice.ToString("C")</td>
+                                            <td><strong>@item.TotalPrice.ToString("C")</strong></td>
                                             <td>
                                                 <button class="btn btn-danger btn-sm remove-item" data-cart-id="@item.Id">
                                                     <i class="bi bi-trash"></i>
@@ -97,6 +105,9 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
+            // Get anti-forgery token
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            
             $('.decrease-quantity').click(function() {
                 var input = $(this).siblings('.quantity-input');
                 var value = parseInt(input.val());
@@ -116,12 +127,82 @@
             $('.quantity-input').change(function() {
                 var cartId = $(this).data('cart-id');
                 var quantity = $(this).val();
-                // Update quantity logic will be implemented here
+                
+                $.ajax({
+                    url: '@Url.Action("UpdateQuantity", "Cart")',
+                    type: 'POST',
+                    data: {
+                        cartId: cartId,
+                        quantity: quantity,
+                        __RequestVerificationToken: token
+                    },
+                    beforeSend: function() {
+                        // Disable input during request
+                        $('.quantity-input[data-cart-id="' + cartId + '"]').prop('disabled', true);
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Reload the page to show updated totals
+                            location.reload();
+                        }
+                    },
+                    error: function() {
+                        alert('Възникна грешка при актуализиране на количеството.');
+                        location.reload();
+                    },
+                    complete: function() {
+                        // Re-enable input
+                        $('.quantity-input[data-cart-id="' + cartId + '"]').prop('disabled', false);
+                    }
+                });
             });
 
             $('.remove-item').click(function() {
                 var cartId = $(this).data('cart-id');
-                // Remove item logic will be implemented here
+                
+                if (confirm('Сигурни ли сте, че искате да премахнете този продукт от количката?')) {
+                    $.ajax({
+                        url: '@Url.Action("RemoveItem", "Cart")',
+                        type: 'POST',
+                        data: {
+                            cartId: cartId,
+                            __RequestVerificationToken: token
+                        },
+                        beforeSend: function() {
+                            // Disable button during request
+                            $('.remove-item[data-cart-id="' + cartId + '"]').prop('disabled', true);
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Reload the page to show updated cart
+                                location.reload();
+                            }
+                        },
+                        error: function() {
+                            alert('Възникна грешка при премахване на продукта.');
+                            location.reload();
+                        }
+                    });
+                }
+            });
+
+            // Add clear cart functionality
+            $('.clear-cart').click(function() {
+                if (confirm('Сигурни ли сте, че искате да изчистите цялата количка?')) {
+                    $.ajax({
+                        url: '@Url.Action("Clear", "Cart")',
+                        type: 'POST',
+                        data: {
+                            __RequestVerificationToken: token
+                        },
+                        success: function() {
+                            location.reload();
+                        },
+                        error: function() {
+                            alert('Възникна грешка при изчистване на количката.');
+                        }
+                    });
+                }
             });
         });
     </script>

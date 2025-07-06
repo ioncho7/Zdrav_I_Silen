@@ -19,6 +19,11 @@ namespace Zdrav_I_SIlen.Controllers
         {
             var categories = await _context.Categories
                 .OrderBy(c => c.DisplayOrder)
+                .Select(c => new
+                {
+                    Category = c,
+                    ProductCount = _context.Products.Count(p => p.CategoryId == c.Id)
+                })
                 .ToListAsync();
             
             return View(categories);

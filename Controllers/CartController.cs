@@ -17,128 +17,218 @@ namespace Zdrav_I_SIlen.Controllers
         // GET: Cart
         public async Task<IActionResult> Index()
         {
-            // For now, we'll get all cart items
-            // In a real application, you'd filter by user session or user ID
-            var cartItems = await _context.Carts.ToListAsync();
-            return View(cartItems);
+            try
+            {
+                // For now, we'll get all cart items
+                // In a real application, you'd filter by user session or user ID
+                var cartItems = await _context.Carts.ToListAsync();
+                return View(cartItems);
+            }
+            catch (Exception ex)
+            {
+                // Log the error here in production
+                TempData["Error"] = "Възникна грешка при зареждане на количката.";
+                return View(new List<Cart>());
+            }
         }
 
         // POST: Cart/AddToCart
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(Guid productId, int quantity = 1)
         {
-            var product = await _context.Products.FindAsync(productId);
-            if (product == null)
+            try
             {
-                return NotFound();
-            }
-
-            // Check if item already exists in cart
-            var existingCartItem = await _context.Carts
-                .FirstOrDefaultAsync(c => c.ProductId == productId);
-
-            if (existingCartItem != null)
-            {
-                // Update quantity
-                existingCartItem.Quantity += quantity;
-                _context.Update(existingCartItem);
-            }
-            else
-            {
-                // Add new cart item
-                var cartItem = new Cart
+                var product = await _context.Products.FindAsync(productId);
+                if (product == null)
                 {
-                    Id = Guid.NewGuid(),
-                    ProductId = productId,
-                    Name = product.Name,
-                    Price = product.UnitPrice,
-                    Quantity = quantity,
-                    Image = product.ImagePath
-                };
+                    return NotFound();
+                }
 
-                _context.Carts.Add(cartItem);
+                // Check if item already exists in cart
+                var existingCartItem = await _context.Carts
+                    .FirstOrDefaultAsync(c => c.ProductId == productId);
+
+                if (existingCartItem != null)
+                {
+                    // Update quantity
+                    existingCartItem.Quantity += quantity;
+                    _context.Update(existingCartItem);
+                }
+                else
+                {
+                    // Add new cart item
+                    var cartItem = new Cart
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = productId,
+                        Name = product.Name,
+                        Price = product.UnitPrice,
+                        Quantity = quantity,
+                        Image = product.ImagePath
+                    };
+
+                    _context.Carts.Add(cartItem);
+                }
+
+                await _context.SaveChangesAsync();
+
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, message = "Продуктът е добавен в количката!" });
+                }
+
+                TempData["Success"] = "Продуктът е добавен в количката!";
+                return RedirectToAction("Index", "Cart");
             }
-
-            await _context.SaveChangesAsync();
-
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            catch (Exception ex)
             {
-                return Json(new { success = true, message = "Продуктът е добавен в количката!" });
-            }
+                // Log the error here in production
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "Възникна грешка при добавяне на продукта." });
+                }
 
-            TempData["Success"] = "Продуктът е добавен в количката!";
-            return RedirectToAction("Index", "Cart");
+                TempData["Error"] = "Възникна грешка при добавяне на продукта.";
+                return RedirectToAction("Index", "Products");
+            }
         }
 
         // POST: Cart/UpdateQuantity
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateQuantity(Guid cartId, int quantity)
         {
-            var cartItem = await _context.Carts.FindAsync(cartId);
-            if (cartItem == null)
+            try
             {
-                return NotFound();
-            }
+                var cartItem = await _context.Carts.FindAsync(cartId);
+                if (cartItem == null)
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "Продуктът не е намерен в количката." });
+                    }
+                    return NotFound();
+                }
 
-            if (quantity <= 0)
+                if (quantity <= 0)
+                {
+                    _context.Carts.Remove(cartItem);
+                }
+                else
+                {
+                    cartItem.Quantity = quantity;
+                    _context.Update(cartItem);
+                }
+
+                await _context.SaveChangesAsync();
+
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true });
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
             {
-                _context.Carts.Remove(cartItem);
-            }
-            else
-            {
-                cartItem.Quantity = quantity;
-                _context.Update(cartItem);
-            }
+                // Log the error here in production
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "Възникна грешка при актуализиране на количеството." });
+                }
 
-            await _context.SaveChangesAsync();
-
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                return Json(new { success = true });
+                TempData["Error"] = "Възникна грешка при актуализиране на количеството.";
+                return RedirectToAction("Index");
             }
-
-            return RedirectToAction("Index");
         }
 
         // POST: Cart/RemoveItem
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveItem(Guid cartId)
         {
-            var cartItem = await _context.Carts.FindAsync(cartId);
-            if (cartItem == null)
+            try
             {
-                return NotFound();
+                var cartItem = await _context.Carts.FindAsync(cartId);
+                if (cartItem == null)
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "Продуктът не е намерен в количката." });
+                    }
+                    return NotFound();
+                }
+
+                _context.Carts.Remove(cartItem);
+                await _context.SaveChangesAsync();
+
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true });
+                }
+
+                TempData["Success"] = "Продуктът е премахнат от количката!";
+                return RedirectToAction("Index");
             }
-
-            _context.Carts.Remove(cartItem);
-            await _context.SaveChangesAsync();
-
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            catch (Exception ex)
             {
-                return Json(new { success = true });
-            }
+                // Log the error here in production
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "Възникна грешка при премахване на продукта." });
+                }
 
-            TempData["Success"] = "Продуктът е премахнат от количката!";
-            return RedirectToAction("Index");
+                TempData["Error"] = "Възникна грешка при премахване на продукта.";
+                return RedirectToAction("Index");
+            }
         }
 
         // POST: Cart/Clear
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Clear()
         {
-            var cartItems = await _context.Carts.ToListAsync();
-            _context.Carts.RemoveRange(cartItems);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var cartItems = await _context.Carts.ToListAsync();
+                _context.Carts.RemoveRange(cartItems);
+                await _context.SaveChangesAsync();
 
-            TempData["Success"] = "Количката е изчистена!";
-            return RedirectToAction("Index");
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true });
+                }
+
+                TempData["Success"] = "Количката е изчистена!";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Log the error here in production
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "Възникна грешка при изчистване на количката." });
+                }
+
+                TempData["Error"] = "Възникна грешка при изчистване на количката.";
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Cart/GetCartCount
         public async Task<IActionResult> GetCartCount()
         {
-            var count = await _context.Carts.SumAsync(c => c.Quantity);
-            return Json(new { count });
+            try
+            {
+                var count = await _context.Carts.SumAsync(c => c.Quantity);
+                return Json(new { count });
+            }
+            catch (Exception ex)
+            {
+                // Log the error here in production
+                return Json(new { count = 0 });
+            }
         }
     }
 } 

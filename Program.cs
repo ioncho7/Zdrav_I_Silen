@@ -101,13 +101,13 @@ static void SeedData(ApplicationDbContext context)
             UnitPrice = 25.99m,
             Quantity = 50,
             CategoryId = categories[0].Id,
-            ImagePath = "/images/vitamin-c.jpg"
+            ImagePath = "/images/vitaminC.jpeg"
         },
         new Product 
         { 
             Id = Guid.NewGuid(),
             Name = "Мултивитамини Комплекс", 
-            Description = "Пълен комплекс от основни витамини и минерали за ежедневна подкрепа на организма. Съдържа витамини A, B-комплекс, C, D3, E и K, заедно с важни минерали като цинк, желязо и магнезий. Подходящ за активни хора и всички, които искат да поддържат оптимално здраве.",
+            Description = "Пълен комплекс от основни витамини и минерали за ежедневна подкрепа на организма.",
             Size = "90 таблетки",
             UnitPrice = 32.99m,
             Quantity = 40,
@@ -123,7 +123,7 @@ static void SeedData(ApplicationDbContext context)
             UnitPrice = 19.99m,
             Quantity = 30,
             CategoryId = categories[1].Id,
-            ImagePath = "/images/magnesium.jpg"
+            ImagePath = "/images/magnezii.jpg"
         },
         new Product 
         { 
@@ -134,7 +134,7 @@ static void SeedData(ApplicationDbContext context)
             UnitPrice = 89.99m,
             Quantity = 15,
             CategoryId = categories[2].Id,
-            ImagePath = "/images/whey-protein.jpg"
+            ImagePath = "/images/protein.jpg"
         }
     };
 
