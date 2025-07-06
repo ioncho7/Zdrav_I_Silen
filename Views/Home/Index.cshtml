@@ -1,9 +1,16 @@
 ﻿@model List<Zdrav_I_SIlen.Models.Product>
 @{
     ViewData["Title"] = "Начало";
+    var placeholderImages = new List<string> {
+        Url.Content("~/images/product1.jpg"),
+        Url.Content("~/images/product2.jpg"),
+        Url.Content("~/images/product3.jpg")
+    };
+    var random = new Random();
 }
 
 <div class="hero-section text-center py-5 bg-light">
+    <img src="~/images/logo.png" alt="Лого" class="mb-4" style="max-width: 180px;">
     <h1 class="display-4">Добре дошли в Здрав и Силен</h1>
     <p class="lead">Вашият източник на здравословни храни и добавки</p>
     <hr class="my-4">
@@ -20,7 +27,7 @@
             {
                 <div class="col-md-4 mb-4">
                     <div class="card">
-                        <img src="@(product.ImagePath ?? "~/images/placeholder.jpg")" class="card-img-top" alt="@product.Name">
+                        <img src="@(string.IsNullOrEmpty(product.ImagePath) ? placeholderImages[random.Next(placeholderImages.Count)] : product.ImagePath)" class="card-img-top" alt="@product.Name">
                         <div class="card-body">
                             <h5 class="card-title">@product.Name</h5>
                             <p class="card-text">@(product.Description ?? "Няма описание.")</p>

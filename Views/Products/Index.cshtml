@@ -1,6 +1,12 @@
 @model IEnumerable<Zdrav_I_SIlen.Models.Product>
 @{
     ViewData["Title"] = "Продукти";
+    var placeholderImages = new List<string> {
+        Url.Content("~/images/product1.jpg"),
+        Url.Content("~/images/product2.jpg"),
+        Url.Content("~/images/product3.jpg")
+    };
+    var random = new Random();
 }
 
 <div class="container">
@@ -65,7 +71,7 @@
                             <div class="card h-100">
                                 @if (!string.IsNullOrEmpty(product.ImagePath))
                                 {
-                                    <img src="@product.ImagePath" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
+                                    <img src="@(string.IsNullOrEmpty(product.ImagePath) ? placeholderImages[random.Next(placeholderImages.Count)] : product.ImagePath)" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
                                 }
                                 else
                                 {

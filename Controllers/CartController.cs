@@ -67,7 +67,7 @@ namespace Zdrav_I_SIlen.Controllers
             }
 
             TempData["Success"] = "Продуктът е добавен в количката!";
-            return RedirectToAction("Index", "Products");
+            return RedirectToAction("Index", "Cart");
         }
 
         // POST: Cart/UpdateQuantity

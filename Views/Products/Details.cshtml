@@ -1,0 +1,46 @@
+@model Zdrav_I_SIlen.Models.Product
+@{
+    ViewData["Title"] = "Детайли за продукта";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="row g-0">
+                    <div class="col-md-5 d-flex align-items-center justify-content-center bg-light">
+                        @if (!string.IsNullOrEmpty(Model.ImagePath))
+                        {
+                            <img src="@Model.ImagePath" class="img-fluid rounded-start" alt="@Model.Name" style="max-height: 300px; object-fit: contain;">
+                        }
+                        else
+                        {
+                            <img src="~/images/placeholder.jpg" class="img-fluid rounded-start" alt="Placeholder" style="max-height: 300px; object-fit: contain;">
+                        }
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <h2 class="card-title mb-3">@Model.Name</h2>
+                            <h5 class="card-subtitle mb-2 text-muted">Категория: @Model.Category?.Name</h5>
+                            <p class="card-text mt-3">@Model.Description</p>
+                            @if (!string.IsNullOrEmpty(Model.Size))
+                            {
+                                <p class="card-text"><strong>Размер:</strong> @Model.Size</p>
+                            }
+                            <p class="card-text"><strong>Цена:</strong> @Model.UnitPrice.ToString("C")</p>
+                            <p class="card-text"><strong>Налично количество:</strong> @Model.Quantity</p>
+                            <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                                <input type="hidden" name="productId" value="@Model.Id" />
+                                <div class="input-group mb-3" style="max-width: 200px;">
+                                    <input type="number" name="quantity" class="form-control" value="1" min="1" max="@Model.Quantity" />
+                                    <button type="submit" class="btn btn-primary">Добави в количката</button>
+                                </div>
+                            </form>
+                            <a asp-controller="Products" asp-action="Index" class="btn btn-link mt-2">&larr; Обратно към продуктите</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

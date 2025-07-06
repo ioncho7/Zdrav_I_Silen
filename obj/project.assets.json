@@ -4723,19 +4723,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mikae\\.nuget\\packages\\": {}
+    "C:\\Users\\ioang\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mikae\\Desktop\\zs\\Zdrav_I_Silen\\Zdrav_I_SIlen.csproj",
+      "projectUniqueName": "C:\\Users\\ioang\\OneDrive\\Документи\\Ioan.py\\A\\A\\Zdrav_I_SIlen.csproj",
       "projectName": "Zdrav_I_SIlen",
-      "projectPath": "C:\\Users\\mikae\\Desktop\\zs\\Zdrav_I_Silen\\Zdrav_I_SIlen.csproj",
-      "packagesPath": "C:\\Users\\mikae\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mikae\\Desktop\\zs\\Zdrav_I_Silen\\obj\\",
+      "projectPath": "C:\\Users\\ioang\\OneDrive\\Документи\\Ioan.py\\A\\A\\Zdrav_I_SIlen.csproj",
+      "packagesPath": "C:\\Users\\ioang\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ioang\\OneDrive\\Документи\\Ioan.py\\A\\A\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\mikae\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ioang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4743,6 +4748,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4755,7 +4761,13 @@
         "warnAsError": [
           "NU1605"
         ]
-      }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -4801,7 +4813,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "c:\\program files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

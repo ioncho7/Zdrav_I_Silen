@@ -1,5 +1,7 @@
 html {
   font-size: 14px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -14,9 +16,97 @@ html {
 
 html {
   position: relative;
-  min-height: 100%;
 }
 
 body {
   margin-bottom: 60px;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  background: transparent;
+  color: #22223b;
+}
+
+.card {
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px rgba(30, 34, 90, 0.08), 0 1.5px 4px rgba(30, 34, 90, 0.04);
+  border: none;
+}
+
+.card-title, .card-subtitle {
+  color: #3a3a5a;
+}
+
+.btn-primary, .btn-outline-primary {
+  background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover, .btn-outline-primary:hover {
+  background: linear-gradient(90deg, #60a5fa 0%, #6366f1 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.16);
+}
+
+.navbar {
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.06);
+  background: linear-gradient(90deg, #f8fafc 0%, #e0e7ff 100%);
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #6366f1 !important;
+  letter-spacing: 1px;
+}
+
+.footer {
+  background: #e0e7ff;
+  color: #6366f1;
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 0 -2px 8px rgba(99, 102, 241, 0.06);
+}
+
+.table {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #fff;
+}
+
+input, select, textarea {
+  border-radius: 0.5rem !important;
+  border: 1px solid #c7d2fe !important;
+  box-shadow: none !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 0.2rem #6366f133 !important;
+}
+
+.alert-success {
+  background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+  border: none;
+  border-radius: 0.75rem;
+}
+
+.alert-danger {
+  background: linear-gradient(90deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+  border: none;
+  border-radius: 0.75rem;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background: #e0e7ff;
+}
+::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 5px;
 }
