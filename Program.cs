@@ -4,6 +4,9 @@ using Zdrav_I_SIlen.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add local configuration file for developer-specific settings
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
