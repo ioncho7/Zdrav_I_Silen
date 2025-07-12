@@ -5,16 +5,24 @@ using System.Text;
 using Zdrav_I_SIlen.Data;
 using Zdrav_I_SIlen.Models;
 using Zdrav_I_SIlen.Models.ViewModels;
+using Zdrav_I_SIlen.Services;
 
 namespace Zdrav_I_SIlen.Controllers
 {
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(
+            ApplicationDbContext context, 
+            IEmailService emailService,
+            ILogger<AccountController> logger)
         {
             _context = context;
+            _emailService = emailService;
+            _logger = logger;
         }
 
         // GET: Account/Login
@@ -87,6 +95,16 @@ namespace Zdrav_I_SIlen.Controllers
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
+
+                // Send welcome email (optional, don't block registration if it fails)
+                try
+                {
+                    await _emailService.SendWelcomeEmailAsync(user.Email, user.FullName);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to send welcome email to {Email}", user.Email);
+                }
 
                 TempData["Success"] = "Регистрацията е успешна! Моля, влезте в профила си.";
                 return RedirectToAction("Login");
@@ -201,6 +219,101 @@ namespace Zdrav_I_SIlen.Controllers
             return View();
         }
 
+        // POST: Account/ForgotPassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email == model.Email && u.IsActive);
+
+                if (user != null)
+                {
+                    // Generate reset code
+                    var resetCode = GenerateResetCode();
+                    user.PasswordResetCode = resetCode;
+                    user.PasswordResetExpiry = DateTime.Now.AddHours(24); // Code expires in 24 hours
+
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+
+                    // Send password reset email
+                    try
+                    {
+                        var emailSent = await _emailService.SendPasswordResetEmailAsync(user.Email, user.FullName, resetCode);
+                        
+                        if (emailSent)
+                        {
+                            TempData["Success"] = "Кодът за възстановяване е изпратен на вашия имейл адрес.";
+                        }
+                        else
+                        {
+                            TempData["Error"] = "Възникна грешка при изпращане на имейла. Моля, опитайте отново.";
+                            return View(model);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to send password reset email to {Email}", user.Email);
+                        TempData["Error"] = "Възникна грешка при изпращане на имейла. Моля, опитайте отново.";
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    // Even if user doesn't exist, show success message for security
+                    TempData["Success"] = "Ако имейлът съществува в системата, ще получите код за възстановяване.";
+                }
+
+                return RedirectToAction("ResetPassword");
+            }
+
+            return View(model);
+        }
+
+        // GET: Account/ResetPassword
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        // POST: Account/ResetPassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email == model.Email && 
+                                           u.PasswordResetCode == model.ResetCode && 
+                                           u.PasswordResetExpiry > DateTime.Now &&
+                                           u.IsActive);
+
+                if (user != null)
+                {
+                    // Reset password
+                    user.Password = HashPassword(model.NewPassword);
+                    user.PasswordResetCode = null;
+                    user.PasswordResetExpiry = null;
+
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+
+                    TempData["Success"] = "Паролата е възстановена успешно! Моля, влезте с новата парола.";
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Невалиден или изтекъл код за възстановяване.");
+                }
+            }
+
+            return View(model);
+        }
+
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())
@@ -208,6 +321,13 @@ namespace Zdrav_I_SIlen.Controllers
                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return Convert.ToBase64String(hashedBytes);
             }
+        }
+
+        private string GenerateResetCode()
+        {
+            // Generate a 6-digit random code
+            var random = new Random();
+            return random.Next(100000, 999999).ToString();
         }
     }
 } 

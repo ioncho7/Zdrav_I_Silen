@@ -395,3 +395,4 @@ product_images/
 .env.test.local
 .env.production.local
 
+appsettings.json

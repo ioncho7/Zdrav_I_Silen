@@ -37,6 +37,13 @@ namespace Zdrav_I_SIlen.Models
         [Display(Name = "Активен")]
         public bool IsActive { get; set; } = true;
 
+        // Password reset fields
+        [Display(Name = "Код за възстановяване на парола")]
+        public string? PasswordResetCode { get; set; }
+
+        [Display(Name = "Времето за изтичане на кода")]
+        public DateTime? PasswordResetExpiry { get; set; }
+
         [Display(Name = "Пълно име")]
         public string FullName => $"{FirstName} {LastName}";
     }

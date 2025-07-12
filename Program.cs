@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Extensions.DependencyInjection;
 using Zdrav_I_SIlen.Data;
 using Zdrav_I_SIlen.Models;
+using Zdrav_I_SIlen.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,15 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Add SendGrid
+builder.Services.AddSendGrid(options =>
+{
+    options.ApiKey = builder.Configuration["SendGrid:ApiKey"];
+});
+
+// Register Email Service
+builder.Services.AddScoped<IEmailService, SendGridEmailService>();
+
 var app = builder.Build();
 
 // Seed the database
@@ -71,73 +82,75 @@ app.MapControllerRoute(
 
 app.Run();
 
+// Seed data method
 static void SeedData(ApplicationDbContext context)
 {
-    // Check if data already exists
-    if (context.Categories.Any() || context.Products.Any())
-        return;
-
-    // Add Categories
-    var categories = new List<Category>
+    try
     {
-        new Category { Id = Guid.NewGuid(), Name = "Витамини", DisplayOrder = 1 },
-        new Category { Id = Guid.NewGuid(), Name = "Минерали", DisplayOrder = 2 },
-        new Category { Id = Guid.NewGuid(), Name = "Протеини", DisplayOrder = 3 },
-        new Category { Id = Guid.NewGuid(), Name = "Билки", DisplayOrder = 4 }
-    };
+        // Ensure database is created
+        context.Database.EnsureCreated();
 
-    context.Categories.AddRange(categories);
-    context.SaveChanges();
+        // Seed categories if they don't exist
+        if (!context.Categories.Any())
+        {
+            var categories = new[]
+            {
+                new Category { Name = "Витамини", DisplayOrder = 1 },
+                new Category { Name = "Протеини", DisplayOrder = 2 },
+                new Category { Name = "Минерали", DisplayOrder = 3 },
+                new Category { Name = "Билки", DisplayOrder = 4 },
+                new Category { Name = "Спортни добавки", DisplayOrder = 5 }
+            };
 
-    // Add Products
-    var products = new List<Product>
-    {
-        new Product 
-        { 
-            Id = Guid.NewGuid(),
-            Name = "Витамин C 1000mg", 
-            Description = "Мощен антиоксидант за силен имунитет",
-            Size = "100 таблетки",
-            UnitPrice = 25.99m,
-            Quantity = 50,
-            CategoryId = categories[0].Id,
-            ImagePath = "/images/vitaminC.jpeg"
-        },
-        new Product 
-        { 
-            Id = Guid.NewGuid(),
-            Name = "Мултивитамини Комплекс", 
-            Description = "Пълен комплекс от основни витамини и минерали за ежедневна подкрепа на организма.",
-            Size = "90 таблетки",
-            UnitPrice = 32.99m,
-            Quantity = 40,
-            CategoryId = categories[0].Id,
-            ImagePath = "/images/vitamini.jpg"
-        },
-        new Product 
-        { 
-            Id = Guid.NewGuid(),
-            Name = "Магнезий 400mg", 
-            Description = "За здрави мускули и нервна система",
-            Size = "60 капсули",
-            UnitPrice = 19.99m,
-            Quantity = 30,
-            CategoryId = categories[1].Id,
-            ImagePath = "/images/magnezii.jpg"
-        },
-        new Product 
-        { 
-            Id = Guid.NewGuid(),
-            Name = "Whey Protein", 
-            Description = "Висококачествен суроватъчен протеин",
-            Size = "2kg",
-            UnitPrice = 89.99m,
-            Quantity = 15,
-            CategoryId = categories[2].Id,
-            ImagePath = "/images/protein.jpg"
+            context.Categories.AddRange(categories);
+            context.SaveChanges();
         }
-    };
 
-    context.Products.AddRange(products);
-    context.SaveChanges();
+        // Seed products if they don't exist
+        if (!context.Products.Any())
+        {
+            var categories = context.Categories.ToList();
+            var products = new[]
+            {
+                new Product
+                {
+                    Name = "Витамин C 1000mg",
+                    Description = "Висококачествен витамин C за укрепване на имунната система",
+                    Size = "100 таблетки",
+                    UnitPrice = 25.99m,
+                    Quantity = 50,
+                    CategoryId = categories.First(c => c.Name == "Витамини").Id,
+                    ImagePath = "https://via.placeholder.com/300x300?text=Vitamin+C"
+                },
+                new Product
+                {
+                    Name = "Whey Protein",
+                    Description = "Суроватъчен протеин за мускулен растеж",
+                    Size = "2кг",
+                    UnitPrice = 89.99m,
+                    Quantity = 30,
+                    CategoryId = categories.First(c => c.Name == "Протеини").Id,
+                    ImagePath = "https://via.placeholder.com/300x300?text=Whey+Protein"
+                },
+                new Product
+                {
+                    Name = "Магнезий",
+                    Description = "Магнезий за здрави кости и мускули",
+                    Size = "60 капсули",
+                    UnitPrice = 19.99m,
+                    Quantity = 40,
+                    CategoryId = categories.First(c => c.Name == "Минерали").Id,
+                    ImagePath = "https://via.placeholder.com/300x300?text=Magnesium"
+                }
+            };
+
+            context.Products.AddRange(products);
+            context.SaveChanges();
+        }
+    }
+    catch (Exception ex)
+    {
+        // Log the error (in production, use proper logging)
+        Console.WriteLine($"Error seeding data: {ex.Message}");
+    }
 }
