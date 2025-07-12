@@ -1,13 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Zdrav_I_SIlen.Models
+namespace Zdrav_I_SIlen.Models.ViewModels
 {
-    public class User
+    public class ProfileViewModel
     {
-        [Required]
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
-
         [Required(ErrorMessage = "Името е задължително.")]
         [MaxLength(50, ErrorMessage = "Името не може да надвишава 50 символа.")]
         [Display(Name = "Име")]
@@ -26,25 +22,5 @@ namespace Zdrav_I_SIlen.Models
         [Phone(ErrorMessage = "Невалиден телефонен номер.")]
         [Display(Name = "Телефон")]
         public string? PhoneNumber { get; set; }
-
-        [Required(ErrorMessage = "Паролата е задължителна.")]
-        [MinLength(6, ErrorMessage = "Паролата трябва да бъде поне 6 символа.")]
-        public string Password { get; set; } = null!;
-
-        [Display(Name = "Дата на регистрация")]
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        [Display(Name = "Активен")]
-        public bool IsActive { get; set; } = true;
-
-        // Password reset fields
-        [Display(Name = "Токен за възстановяване на парола")]
-        public string? PasswordResetCode { get; set; }
-
-        [Display(Name = "Времето за изтичане на токена")]
-        public DateTime? PasswordResetExpiry { get; set; }
-
-        [Display(Name = "Пълно име")]
-        public string FullName => $"{FirstName} {LastName}";
     }
 } 

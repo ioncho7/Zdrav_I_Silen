@@ -4,12 +4,20 @@ using Microsoft.EntityFrameworkCore;
 using Zdrav_I_SIlen.Models;
 using Zdrav_I_SIlen.Models.ViewModels;
 using Zdrav_I_SIlen.Data;
+using Zdrav_I_SIlen.Services;
 
 namespace Zdrav_I_SIlen.Controllers
 {
-    public class HomeController(ApplicationDbContext context) : Controller
+    public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _context = context;
+        private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
+
+        public HomeController(ApplicationDbContext context, IEmailService emailService)
+        {
+            _context = context;
+            _emailService = emailService;
+        }
 
         public async Task<IActionResult> Index()
         {
@@ -77,6 +85,27 @@ namespace Zdrav_I_SIlen.Controllers
             }
 
             return View(model);
+        }
+
+        // Test email functionality (remove in production)
+        public async Task<IActionResult> TestEmail(string email = "test@example.com")
+        {
+            try
+            {
+                await _emailService.SendEmailAsync(
+                    email,
+                    "Test Email - Zdrav I Silen",
+                    "<h2>Test Email</h2><p>This is a test email to verify your email configuration is working correctly.</p><p>If you receive this, your email service is properly configured!</p>"
+                );
+                
+                ViewBag.Message = $"✅ Test email sent successfully to {email}";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = $"❌ Failed to send email: {ex.Message}";
+            }
+            
+            return View("TestDb"); // Reuse the TestDb view for display
         }
 
         public IActionResult Privacy()

@@ -396,3 +396,5 @@ product_images/
 .env.production.local
 
 appsettings.json
+appsettings.Local.json.template
+appsettings.json

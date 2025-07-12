@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using SendGrid.Extensions.DependencyInjection;
 using Zdrav_I_SIlen.Data;
 using Zdrav_I_SIlen.Models;
-using Zdrav_I_SIlen.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +9,9 @@ builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, relo
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register Email Service
+builder.Services.AddTransient<Zdrav_I_SIlen.Services.IEmailService, Zdrav_I_SIlen.Services.EmailService>();
 
 // Configure SQL Server with connection pooling and retry logic
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -42,15 +43,6 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
-// Add SendGrid
-builder.Services.AddSendGrid(options =>
-{
-    options.ApiKey = builder.Configuration["SendGrid:ApiKey"];
-});
-
-// Register Email Service
-builder.Services.AddScoped<IEmailService, SendGridEmailService>();
 
 var app = builder.Build();
 

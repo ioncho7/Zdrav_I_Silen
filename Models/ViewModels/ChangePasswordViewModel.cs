@@ -2,11 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Zdrav_I_SIlen.Models.ViewModels
 {
-    public class ResetPasswordViewModel
+    public class ChangePasswordViewModel
     {
-        [Required(ErrorMessage = "Токенът за възстановяване е задължителен.")]
-        [Display(Name = "Токен за възстановяване")]
-        public string Token { get; set; } = null!;
+        [Required(ErrorMessage = "Текущата парола е задължителна.")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Текуща парола")]
+        public string CurrentPassword { get; set; } = null!;
 
         [Required(ErrorMessage = "Новата парола е задължителна.")]
         [MinLength(6, ErrorMessage = "Паролата трябва да бъде поне 6 символа.")]
@@ -15,9 +16,9 @@ namespace Zdrav_I_SIlen.Models.ViewModels
         public string NewPassword { get; set; } = null!;
 
         [Required(ErrorMessage = "Потвърждението на паролата е задължително.")]
+        [Compare("NewPassword", ErrorMessage = "Новите пароли не съвпадат.")]
         [DataType(DataType.Password)]
-        [Compare("NewPassword", ErrorMessage = "Паролите не съвпадат.")]
-        [Display(Name = "Потвърди новата парола")]
+        [Display(Name = "Потвърди нова парола")]
         public string ConfirmPassword { get; set; } = null!;
     }
 } 
